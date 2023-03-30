@@ -32,6 +32,7 @@ typedef bool (*Dart_PostCObjectType)(Dart_Port port_id, Dart_CObject* message);
 
 Dart_PostCObjectType g_dart_post_C_object;
 Dart_Port g_callback_port;
+Dart_Port g_callback_port_2;
 
 DLLEXPORT void InitializeDartApi(Dart_PostCObjectType dart_post_C_object,
                                  Dart_Port callback_port, void* data) {
@@ -39,6 +40,14 @@ DLLEXPORT void InitializeDartApi(Dart_PostCObjectType dart_post_C_object,
   g_callback_port = callback_port;
   Dart_InitializeApiDL(data);
 }
+
+DLLEXPORT void InitializeDartApi2(Dart_PostCObjectType dart_post_C_object,
+                                  Dart_Port callback_port, void* data) {
+  g_dart_post_C_object = dart_post_C_object;
+  g_callback_port_2 = callback_port;
+  Dart_InitializeApiDL(data);
+}
+DLLEXPORT void unInitial() { g_callback_port_2 = 0; }
 
 inline void OnPlayPauseStop(int32_t id, PlayerState* state) {
   Dart_CObject id_object;
@@ -64,7 +73,11 @@ inline void OnPlayPauseStop(int32_t id, PlayerState* state) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 4;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnPosition(int32_t id, PlayerState* state) {
@@ -95,7 +108,11 @@ inline void OnPosition(int32_t id, PlayerState* state) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 5;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnComplete(int32_t id, PlayerState* state) {
@@ -118,7 +135,11 @@ inline void OnComplete(int32_t id, PlayerState* state) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 3;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnVolume(int32_t id, PlayerState* state) {
@@ -140,7 +161,11 @@ inline void OnVolume(int32_t id, PlayerState* state) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 3;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnRate(int32_t id, PlayerState* state) {
@@ -162,7 +187,11 @@ inline void OnRate(int32_t id, PlayerState* state) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 3;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnOpen(int32_t id, PlayerState* state) {
@@ -230,7 +259,11 @@ inline void OnOpen(int32_t id, PlayerState* state) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 6;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnVideoDimensions(int32_t id, int32_t video_width,
@@ -258,7 +291,11 @@ inline void OnVideoDimensions(int32_t id, int32_t video_width,
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 4;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnVideoFrame(int32_t id, int size, uint8_t* frame) {
@@ -282,7 +319,11 @@ inline void OnVideoFrame(int32_t id, int size, uint8_t* frame) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 3;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnBuffering(int32_t id, float buffering) {
@@ -304,7 +345,11 @@ inline void OnBuffering(int32_t id, float buffering) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 3;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 inline void OnError(int32_t id, const char* error) {
@@ -326,7 +371,11 @@ inline void OnError(int32_t id, const char* error) {
   return_object.type = Dart_CObject_kArray;
   return_object.value.as_array.length = 3;
   return_object.value.as_array.values = value_objects;
-  g_dart_post_C_object(g_callback_port, &return_object);
+  if (g_callback_port_2 != 0) {
+    g_dart_post_C_object(g_callback_port_2, &return_object);
+  } else {
+    g_dart_post_C_object(g_callback_port, &return_object);
+  }
 }
 
 #ifdef __cplusplus
