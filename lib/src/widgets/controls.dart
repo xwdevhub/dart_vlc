@@ -65,6 +65,7 @@ class Control extends StatefulWidget {
 class ControlState extends State<Control> with SingleTickerProviderStateMixin {
   bool _hideControls = true;
   bool _displayTapped = false;
+  Duration totalTime = Duration.zero;
   Timer? _hideTimer;
   late StreamSubscription<PlaybackState> playPauseStream;
   late AnimationController playPauseController;
@@ -149,7 +150,7 @@ class ControlState extends State<Control> with SingleTickerProviderStateMixin {
                       bottom: 0,
                       child: Padding(
                         padding:
-                            EdgeInsets.only(bottom: 60, right: 20, left: 20),
+                        EdgeInsets.only(bottom: 60, right: 20, left: 20),
                         child: StreamBuilder<PositionState>(
                           stream: player.positionStream,
                           builder: (BuildContext context,
@@ -157,23 +158,27 @@ class ControlState extends State<Control> with SingleTickerProviderStateMixin {
                             final durationState = snapshot.data;
                             final progress =
                                 durationState?.position ?? Duration.zero;
+                            if (null != durationState?.duration && Duration.zero != durationState?.duration) {
+                              totalTime = (durationState?.duration)!;
+                            }
                             final total =
                                 durationState?.duration ?? Duration.zero;
+
                             return Theme(
                               data: ThemeData.dark(),
                               child: ProgressBar(
                                 progress: progress,
-                                total: total,
+                                total: totalTime,
                                 barHeight: 3,
                                 progressBarColor: widget.progressBarActiveColor,
                                 thumbColor: widget.progressBarThumbColor,
                                 baseBarColor: widget.progressBarInactiveColor,
                                 thumbGlowColor:
-                                    widget.progressBarThumbGlowColor,
+                                widget.progressBarThumbGlowColor,
                                 thumbRadius:
-                                    widget.progressBarThumbRadius ?? 10.0,
+                                widget.progressBarThumbRadius ?? 10.0,
                                 thumbGlowRadius:
-                                    widget.progressBarThumbGlowRadius ?? 30.0,
+                                widget.progressBarThumbGlowRadius ?? 30.0,
                                 timeLabelLocation: TimeLabelLocation.sides,
                                 timeLabelType: widget.showTimeLeft!
                                     ? TimeLabelType.remainingTime
@@ -213,7 +218,7 @@ class ControlState extends State<Control> with SingleTickerProviderStateMixin {
                                   icon: Icon(Icons.replay_10),
                                   onPressed: () {
                                     int positionInMilliseconds = player.position
-                                            .position?.inMilliseconds ??
+                                        .position?.inMilliseconds ??
                                         0;
                                     if (!(positionInMilliseconds - 10000)
                                         .isNegative) {
@@ -247,17 +252,17 @@ class ControlState extends State<Control> with SingleTickerProviderStateMixin {
                                   icon: Icon(Icons.forward_10),
                                   onPressed: () {
                                     int durationInMilliseconds = player.position
-                                            .duration?.inMilliseconds ??
+                                        .duration?.inMilliseconds ??
                                         0;
                                     int positionInMilliseconds = player.position
-                                            .position?.inMilliseconds ??
+                                        .position?.inMilliseconds ??
                                         1;
                                     if ((positionInMilliseconds + 10000) <=
                                         durationInMilliseconds) {
                                       positionInMilliseconds += 10000;
                                       player.seek(Duration(
                                           milliseconds:
-                                              positionInMilliseconds));
+                                          positionInMilliseconds));
                                       setState(() {});
                                     }
                                   }),
@@ -297,14 +302,15 @@ class ControlState extends State<Control> with SingleTickerProviderStateMixin {
                             itemBuilder: (context) {
                               return Devices.all
                                   .map(
-                                    (device) => PopupMenuItem(
+                                    (device) =>
+                                    PopupMenuItem(
                                       child: Text(device.name,
                                           style: TextStyle(
                                             fontSize: 14.0,
                                           )),
                                       value: device,
                                     ),
-                                  )
+                              )
                                   .toList();
                             },
                           ),
